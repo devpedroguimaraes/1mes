@@ -1,0 +1,237 @@
+/* NOSSO PRIMEIRO CAPÍTULO — CINEMATIC V2.0 */
+
+:root {
+    --cinema-red: #b51217;
+    --cinema-gold: #d99a24;
+}
+
+body.cinema-mode::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 9990;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 50% 45%, rgba(181,18,23,.08), transparent 38%),
+        radial-gradient(circle at 15% 20%, rgba(217,154,36,.035), transparent 25%),
+        radial-gradient(circle at 85% 80%, rgba(181,18,23,.045), transparent 30%);
+    mix-blend-mode: screen;
+}
+
+body.cinema-mode::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 9991;
+    pointer-events: none;
+    opacity: .13;
+    background-image: repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,.035) 0,
+        rgba(255,255,255,.035) 1px,
+        transparent 1px,
+        transparent 4px
+    );
+}
+
+.cinema-vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 9989;
+    pointer-events: none;
+    box-shadow:
+        inset 0 0 13vw rgba(0,0,0,.72),
+        inset 0 0 5vw rgba(0,0,0,.45);
+}
+
+#welcome-screen.active,
+#story-screen.active,
+#gallery-screen.active {
+    animation: cinemaScreenIn 1.05s cubic-bezier(.22,.8,.25,1) both;
+}
+
+@keyframes cinemaScreenIn {
+    from { opacity: 0; transform: scale(1.025); filter: blur(7px); }
+    to { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+
+#start-button,
+#continue-button,
+#close-surprise {
+    position: relative;
+    overflow: hidden;
+    transition: transform .35s ease, box-shadow .35s ease, filter .35s ease;
+}
+
+#start-button::after,
+#continue-button::after,
+#close-surprise::after {
+    content: "";
+    position: absolute;
+    top: -80%;
+    left: -55%;
+    width: 35%;
+    height: 260%;
+    transform: rotate(25deg);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.38), transparent);
+    animation: buttonShine 4.8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+#start-button:hover,
+#continue-button:hover,
+#close-surprise:hover {
+    transform: translateY(-3px) scale(1.015);
+    filter: brightness(1.08);
+    box-shadow: 0 12px 35px rgba(181,18,23,.28);
+}
+
+@keyframes buttonShine {
+    0%, 62% { left: -55%; }
+    82%, 100% { left: 125%; }
+}
+
+.gallery-wrapper {
+    perspective: 1200px;
+}
+
+.gallery-card {
+    transform-style: preserve-3d;
+    will-change: transform, filter;
+}
+
+.gallery-card.cinema-photo-change {
+    animation: photoChange .9s cubic-bezier(.22,.8,.25,1) both;
+}
+
+.gallery-card.cinema-breathe {
+    animation: photoBreathe 4.8s ease-in-out infinite;
+}
+
+@keyframes photoChange {
+    0% { filter: brightness(.8) saturate(.8); transform: scale(.985); }
+    55% { filter: brightness(1.06) saturate(1.06); transform: scale(1.012); }
+    100% { filter: brightness(1) saturate(1); transform: scale(1); }
+}
+
+@keyframes photoBreathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.012); }
+}
+
+#surprise-overlay.show {
+    animation: surpriseIn 1.2s cubic-bezier(.18,.8,.2,1) both;
+}
+
+#surprise-overlay.show .surprise-photo-container {
+    animation: surprisePhotoIn 1.2s .12s cubic-bezier(.18,.8,.2,1) both;
+}
+
+#surprise-overlay.show .surprise-small,
+#surprise-overlay.show .surprise-title,
+#surprise-overlay.show .surprise-text,
+#surprise-overlay.show .surprise-final,
+#surprise-overlay.show #close-surprise {
+    animation: cinemaFadeUp 1s both;
+}
+
+#surprise-overlay.show .surprise-small { animation-delay: .35s; }
+#surprise-overlay.show .surprise-title { animation-delay: .52s; }
+#surprise-overlay.show .surprise-text { animation-delay: .70s; }
+#surprise-overlay.show .surprise-final { animation-delay: .88s; }
+#surprise-overlay.show #close-surprise { animation-delay: 1.08s; }
+
+@keyframes surpriseIn {
+    from { opacity: 0; filter: blur(12px); }
+    to { opacity: 1; filter: blur(0); }
+}
+
+@keyframes surprisePhotoIn {
+    from { opacity: 0; transform: scale(.86) translateY(24px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes cinemaFadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#final-screen.show {
+    animation: finalCinemaReveal 1.65s cubic-bezier(.16,.82,.18,1) both;
+}
+
+#final-screen.show .final-background {
+    animation: finalBackgroundZoom 12s ease-out both;
+}
+
+#final-screen.show .final-content {
+    animation: finalContentCinema 1.7s .18s cubic-bezier(.18,.8,.2,1) both;
+}
+
+#final-screen.show .final-love {
+    animation: finalLoveCinema 1.25s 1.72s both;
+}
+
+#final-screen.show .final-infinity {
+    animation: finalInfinityCinema 1.6s 2.05s both;
+}
+
+@keyframes finalCinemaReveal {
+    from { opacity: 0; filter: blur(15px); transform: scale(1.035); }
+    to { opacity: 1; filter: blur(0); transform: scale(1); }
+}
+
+@keyframes finalBackgroundZoom {
+    from { transform: scale(1); }
+    to { transform: scale(1.08); }
+}
+
+@keyframes finalContentCinema {
+    from { opacity: 0; transform: translateY(35px) scale(.985); filter: blur(6px); }
+    to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+@keyframes finalLoveCinema {
+    from { opacity: 0; transform: scale(.78); filter: blur(5px); }
+    65% { transform: scale(1.045); }
+    to { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+
+@keyframes finalInfinityCinema {
+    from { opacity: 0; transform: scale(.5) rotate(-12deg); }
+    to { opacity: .75; transform: scale(1) rotate(0); }
+}
+
+.cinema-particle {
+    position: fixed;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9992;
+    background: rgba(255,255,255,.55);
+    box-shadow: 0 0 12px rgba(255,255,255,.35);
+    animation: cinemaParticleFloat linear forwards;
+}
+
+@keyframes cinemaParticleFloat {
+    from { opacity: 0; transform: translate3d(0,20px,0) scale(.5); }
+    15% { opacity: .7; }
+    85% { opacity: .35; }
+    to { opacity: 0; transform: translate3d(var(--drift),-105vh,0) scale(1); }
+}
+
+@media (max-width: 600px) {
+    body.cinema-mode::after { opacity: .08; }
+    .cinema-vignette {
+        box-shadow: inset 0 0 20vw rgba(0,0,0,.6), inset 0 0 8vw rgba(0,0,0,.35);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+}

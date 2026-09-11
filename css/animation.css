@@ -1,0 +1,388 @@
+/* =========================================================
+   ANIMAÇÕES
+========================================================= */
+
+
+@keyframes shine {
+
+    0% {
+        left: -100%;
+    }
+
+    35% {
+        left: 150%;
+    }
+
+    100% {
+        left: 150%;
+    }
+
+}
+
+
+@keyframes heartPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: .8;
+    }
+
+    50% {
+        transform: scale(1.12);
+        opacity: 1;
+    }
+
+}
+
+
+@keyframes secretPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+
+        box-shadow:
+            0 0 15px
+            rgba(
+                255,
+                55,
+                95,
+                .25
+            );
+    }
+
+    50% {
+        transform: scale(1.12);
+
+        box-shadow:
+            0 0 35px
+            rgba(
+                255,
+                55,
+                95,
+                .7
+            );
+    }
+
+}
+
+
+@keyframes surpriseAppear {
+
+    0% {
+        opacity: 0;
+
+        transform:
+            translateY(35px)
+            scale(.92);
+    }
+
+    100% {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+
+@keyframes floatFinalHeart {
+
+    0% {
+        opacity: 0;
+
+        transform:
+            translate3d(
+                0,
+                0,
+                0
+            )
+            scale(.5)
+            rotate(0deg);
+    }
+
+    15% {
+        opacity: .9;
+    }
+
+    100% {
+        opacity: 0;
+
+        transform:
+            translate3d(
+                var(--x, 0),
+                var(--y, -105vh),
+                0
+            )
+            scale(1.5)
+            rotate(
+                var(--r, 25deg)
+            );
+    }
+
+}
+
+
+@keyframes counterPop {
+
+    0% {
+        opacity: 0;
+
+        transform:
+            translateY(8px)
+            scale(.85);
+    }
+
+    100% {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+
+.counter-change {
+    animation:
+        counterPop
+        .35s
+        ease;
+}
+
+
+@keyframes galleryHeart {
+
+    0% {
+        opacity: 0;
+
+        transform:
+            translate3d(
+                0,
+                0,
+                0
+            )
+            scale(.3);
+    }
+
+    15% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+
+        transform:
+            translate3d(
+                var(--heart-x),
+                var(--heart-y),
+                0
+            )
+            scale(1.25)
+            rotate(
+                var(--heart-rotate)
+            );
+    }
+
+}
+
+
+.gallery-heart {
+    position: absolute;
+
+    z-index: 100;
+
+    pointer-events: none;
+
+    font-size: 18px;
+
+    animation:
+        galleryHeart
+        1.2s
+        ease-out
+        forwards;
+}
+
+/* =========================================================
+   ANIMACOES DA TELA FINAL
+========================================================= */
+
+@keyframes finalContentAppear {
+
+    0% {
+
+        opacity: 0;
+
+        transform:
+            translateY(40px)
+            scale(0.96);
+
+    }
+
+    100% {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+
+    }
+
+}
+
+
+@keyframes finalFadeUp {
+
+    0% {
+
+        opacity: 0;
+
+        transform:
+            translateY(20px);
+
+    }
+
+    100% {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
+
+
+@keyframes finalLoveAppear {
+
+    0% {
+
+        opacity: 0;
+
+        transform:
+            scale(0.7)
+            translateY(15px);
+
+    }
+
+    60% {
+
+        opacity: 1;
+
+        transform:
+            scale(1.08)
+            translateY(0);
+
+    }
+
+    100% {
+
+        opacity: 1;
+
+        transform:
+            scale(1)
+            translateY(0);
+
+    }
+
+}
+
+
+@keyframes finalHeart {
+
+    0%,
+    100% {
+
+        transform:
+            scale(1);
+
+    }
+
+    50% {
+
+        transform:
+            scale(1.16);
+
+    }
+
+}
+
+
+@keyframes finalGlow {
+
+    0%,
+    100% {
+
+        transform:
+            scale(0.9);
+
+        opacity: 0.55;
+
+    }
+
+    50% {
+
+        transform:
+            scale(1.15);
+
+        opacity: 1;
+
+    }
+
+}
+
+
+@keyframes finalFloatingHeart {
+
+    0% {
+
+        opacity: 0;
+
+        transform:
+            translate3d(0, 0, 0)
+            scale(0.5)
+            rotate(0deg);
+
+    }
+
+    15% {
+
+        opacity: 0.55;
+
+    }
+
+    50% {
+
+        transform:
+            translate3d(
+                30px,
+                -50vh,
+                0
+            )
+            scale(1)
+            rotate(15deg);
+
+    }
+
+    100% {
+
+        opacity: 0;
+
+        transform:
+            translate3d(
+                -20px,
+                -110vh,
+                0
+            )
+            scale(1.4)
+            rotate(-20deg);
+
+    }
+
+}

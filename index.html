@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#080405"
+    >
+
+    <title>
+        Nosso Primeiro Capítulo ❤️
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/cinematic.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/animation.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/responsive.css"
+    >
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         PARTICULAS
+    ====================================================== -->
+
+    <div
+        id="particles-container"
+        class="particles-container"
+    ></div>
+
+
+    <!-- =====================================================
+         MUSICA
+    ====================================================== -->
+
+    <audio
+        id="background-music"
+        loop
+        preload="auto"
+    >
+
+        <source
+            src="assets/music/nossa-musica.mp3"
+            type="audio/mpeg"
+        >
+
+    </audio>
+
+
+    <!-- =====================================================
+         FASE 1
+    ====================================================== -->
+
+    <main
+        id="welcome-screen"
+        class="screen screen-welcome active"
+    >
+
+        <div class="welcome-content">
+
+
+            <div class="heart-container">
+
+                <div class="heart">
+                    ❤️
+                </div>
+
+            </div>
+
+
+            <p class="welcome-small">
+                PARA VOCÊ
+            </p>
+
+
+            <h1 class="welcome-title">
+
+                Nosso primeiro
+                <br>
+
+                <span>
+                    capítulo.
+                </span>
+
+            </h1>
+
+
+            <p class="welcome-text">
+
+                Uma pequena surpresa
+                <br>
+
+                preparada especialmente
+                para você.
+
+            </p>
+
+
+            <div class="welcome-date">
+
+                13 DE SETEMBRO DE 2026
+
+            </div>
+
+
+            <button
+                id="start-button"
+                class="main-button"
+                type="button"
+            >
+
+                <span>
+                    ABRIR NOSSA HISTÓRIA
+                </span>
+
+                <span>
+                    ❤️
+                </span>
+
+            </button>
+
+
+            <p class="welcome-hint">
+
+                Toque para começar
+
+            </p>
+
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         FASE 2
+    ====================================================== -->
+
+    <section
+        id="story-screen"
+        class="screen screen-story"
+    >
+
+
+        <div class="photo-background">
+
+            <img
+                src="assets/images/FOTO1.jpeg"
+                alt=""
+            >
+
+        </div>
+
+
+        <div class="photo-overlay"></div>
+
+
+        <div class="personal-content">
+
+
+            <p class="personal-greeting">
+
+                Oi, meu amor. ❤️
+
+            </p>
+
+
+            <div class="main-photo-container">
+
+                <div class="photo-glow"></div>
+
+
+                <img
+                    class="main-photo"
+                    src="assets/images/FOTO1.jpeg"
+                    alt="Nosso momento"
+                >
+
+
+                <div class="photo-shine"></div>
+
+            </div>
+
+
+            <p class="personal-label">
+                UM MÊS
+            </p>
+
+
+            <h2 class="personal-name">
+                Meu amor
+            </h2>
+
+
+            <p class="personal-text">
+
+                Algumas histórias começam por acaso...
+                <br>
+
+                A nossa começou no momento certo.
+
+            </p>
+
+
+            <div class="relationship-counter">
+
+                <span
+                    id="days-counter"
+                    class="counter-number"
+                >
+                    00
+                </span>
+
+                <span class="counter-label">
+                    DIAS
+                </span>
+
+            </div>
+
+
+            <div class="quote-container">
+
+                <p id="quote">
+
+                    Que esse seja apenas o primeiro
+                    de muitos capítulos.
+
+                </p>
+
+            </div>
+
+
+            <button
+                id="continue-button"
+                class="main-button"
+                type="button"
+            >
+
+                <span>
+                    QUERO TE MOSTRAR UMA COISA
+                </span>
+
+                <span>
+                    →
+                </span>
+
+            </button>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FASE 3 - GALERIA
+    ====================================================== -->
+
+    <section
+        id="gallery-screen"
+        class="screen gallery-screen"
+    >
+
+
+        <div class="gallery-background"></div>
+
+
+        <div class="gallery-content">
+
+
+            <div class="gallery-header">
+
+                <span class="gallery-small-title">
+                    NOSSO ÁLBUM
+                </span>
+
+
+                <h2>
+
+                    Cada foto guarda
+                    <br>
+
+                    <span>
+                        um pedacinho de nós.
+                    </span>
+
+                </h2>
+
+            </div>
+
+
+            <div
+                id="gallery-wrapper"
+                class="gallery-wrapper"
+            >
+
+
+                <div class="gallery-track">
+
+
+                    <div class="gallery-card active">
+
+                        <img
+                            src="assets/images/FOTO1.jpeg"
+                            alt="Nossa foto 1"
+                            draggable="false"
+                        >
+
+                    </div>
+
+
+                    <div class="gallery-card">
+
+                        <img
+                            src="assets/images/FOTO2.jpeg"
+                            alt="Nossa foto 2"
+                            draggable="false"
+                        >
+
+                    </div>
+
+
+                    <div class="gallery-card">
+
+                        <img
+                            src="assets/images/FOTO3.jpeg"
+                            alt="Nossa foto 3"
+                            draggable="false"
+                        >
+
+                    </div>
+
+
+                    <div class="gallery-card">
+
+                        <img
+                            src="assets/images/FOTO4.jpeg"
+                            alt="Nossa foto 4"
+                            draggable="false"
+                        >
+
+                    </div>
+
+
+                    <div class="gallery-card">
+
+                        <img
+                            src="assets/images/FOTO5.jpeg"
+                            alt="Nossa foto 5"
+                            draggable="false"
+                        >
+
+                    </div>
+
+
+                    <div class="gallery-card">
+
+                        <img
+                            src="assets/images/FOTO6.jpeg"
+                            alt="Nossa foto 6"
+                            draggable="false"
+                        >
+
+                    </div>
+
+
+                    <div class="gallery-card">
+
+                        <img
+                            src="assets/images/FOTO7.jpeg"
+                            alt="Nossa foto 7"
+                            draggable="false"
+                        >
+
+                    </div>
+
+
+                    <div class="gallery-card">
+
+                        <img
+                            src="assets/images/FOTO8.jpeg"
+                            alt="Nossa foto 8"
+                            draggable="false"
+                        >
+
+                    </div>
+
+
+                    <div class="gallery-card">
+
+                        <img
+                            src="assets/images/FOTO9.jpeg"
+                            alt="Nossa foto 9"
+                            draggable="false"
+                        >
+
+                    </div>
+
+
+                    <div class="gallery-card">
+
+                        <img
+                            src="assets/images/FOTO10.jpeg"
+                            alt="Nossa foto 10"
+                            draggable="false"
+                        >
+
+                    </div>
+
+
+                    <div class="gallery-card">
+
+                        <img
+                            src="assets/images/FOTO11.jpeg"
+                            alt="Nossa foto 11"
+                            draggable="false"
+                        >
+
+                    </div>
+
+
+                    <div class="gallery-card">
+
+                        <img
+                            src="assets/images/FOTO12.jpeg"
+                            alt="Nossa foto 12"
+                            draggable="false"
+                        >
+
+                    </div>
+
+
+                    <div class="gallery-card">
+
+                        <img
+                            src="assets/images/FOTO13.jpeg"
+                            alt="Nossa foto 13"
+                            draggable="false"
+                        >
+
+                    </div>
+
+
+                    <div class="gallery-card">
+
+                        <img
+                            src="assets/images/FOTO14.jpeg"
+                            alt="Nossa foto 14"
+                            draggable="false"
+                        >
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <div class="gallery-info">
+
+
+                <div class="gallery-counter">
+
+                    <span id="gallery-current">
+                        01
+                    </span>
+
+
+                    <span class="gallery-line"></span>
+
+
+                    <span id="gallery-total">
+                        14
+                    </span>
+
+                </div>
+
+
+                <p id="gallery-caption">
+
+                    Nosso primeiro capítulo ❤️
+
+                </p>
+
+
+            </div>
+
+
+            <div class="gallery-hint">
+
+                <span>←</span>
+
+                <span>
+                    DESLIZE PARA PASSAR AS FOTOS
+                </span>
+
+                <span>→</span>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         SURPRESA
+    ====================================================== -->
+
+    <div
+        id="surprise-overlay"
+        class="surprise-overlay"
+    >
+
+
+        <div class="surprise-content">
+
+
+            <div class="surprise-photo-container">
+
+                <img
+                    src="assets/images/FOTO4.jpeg"
+                    alt="Nossa lembrança"
+                    class="surprise-photo"
+                >
+
+            </div>
+
+
+            <p class="surprise-small">
+
+                E ANTES DE TERMINAR...
+
+            </p>
+
+
+            <h2 class="surprise-title">
+
+                Um mês pode parecer pouco...
+
+                <br>
+
+                <span>
+                    mas para mim significa muito.
+                </span>
+
+            </h2>
+
+
+            <p class="surprise-text">
+
+                Porque em apenas um mês você
+                conseguiu se tornar uma das
+                partes mais bonitas dos meus dias.
+
+            </p>
+
+
+            <div class="surprise-hearts">
+
+                ❤️ ♥ ❤️
+
+            </div>
+
+
+            <div class="surprise-final">
+
+                <span>
+                    ❤️
+                </span>
+
+                <p>
+                    E eu ainda quero viver
+                    muito mais com você.
+                </p>
+
+                <span>
+                    ❤️
+                </span>
+
+            </div>
+
+
+            <button
+                id="close-surprise"
+                class="surprise-button"
+                type="button"
+            >
+
+                CONTINUAR NOSSA HISTÓRIA ❤️
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         TELA FINAL
+    ====================================================== -->
+
+    <section
+        id="final-screen"
+        class="final-screen"
+    >
+
+
+        <div class="final-background"></div>
+
+
+        <div class="final-glow"></div>
+
+
+        <div
+            id="final-particles"
+            class="final-particles"
+        ></div>
+
+
+        <div class="final-hearts">
+
+            <span>❤️</span>
+            <span>♥</span>
+            <span>❤️</span>
+            <span>♥</span>
+            <span>❤️</span>
+            <span>♥</span>
+            <span>❤️</span>
+            <span>♥</span>
+
+        </div>
+
+
+        <div class="final-content">
+
+
+            <p class="final-small">
+
+                NOSSO PRIMEIRO CAPÍTULO
+
+            </p>
+
+
+            <div class="final-symbol">
+                ❤️
+            </div>
+
+
+            <h1 class="final-title">
+
+                E esse foi
+                <br>
+
+                <span>
+                    só o começo.
+                </span>
+
+            </h1>
+
+
+            <div class="final-divider">
+
+                <span></span>
+
+                <b>
+                    ♥
+                </b>
+
+                <span></span>
+
+            </div>
+
+
+            <p class="final-message">
+
+                Um mês ao seu lado foi suficiente
+                para me fazer perceber que eu quero
+                viver muitos outros momentos com você.
+
+            </p>
+
+
+            <p class="final-message second">
+
+                Quero estar presente nos dias bons,
+                nos dias difíceis, nas risadas,
+                nos abraços e em todas as pequenas
+                coisas que ainda vamos viver.
+
+            </p>
+
+
+            <p class="final-love">
+
+                Eu te amo, Momo.
+
+            </p>
+
+
+            <div class="final-infinity">
+                ∞
+            </div>
+
+
+            <p class="final-end">
+
+                Que venham todos os próximos capítulos. ❤️
+
+            </p>
+
+
+        </div>
+
+
+        <div class="final-signature">
+
+            Feito com amor, para você. ❤️
+
+        </div>
+
+
+    </section>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script src="js/effects.js"></script>
+
+    <script src="js/app.js"></script>
+
+    <script src="js/gallery.js"></script>
+
+    <script src="js/cinematic.js"></script>
+
+
+</body>
+
+</html>
