@@ -100,25 +100,43 @@ body.cinema-mode::after {
     will-change: transform, filter;
 }
 
+/* =========================================================
+   GALERIA — TRANSIÇÃO SUAVE
+   ========================================================= */
+
+.gallery-wrapper {
+    perspective: none;
+}
+
+.gallery-card {
+    transform: translate3d(0, 0, 0);
+    will-change: opacity;
+    transition:
+        opacity .35s ease,
+        transform .35s ease;
+}
+
+/* Entrada extremamente suave da nova foto */
 .gallery-card.cinema-photo-change {
-    animation: photoChange .9s cubic-bezier(.22,.8,.25,1) both;
+    animation: softPhotoChange .45s ease-out both;
 }
 
+@keyframes softPhotoChange {
+
+    0% {
+        opacity: .78;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Removemos o "zoom respirando" que estava brigando
+   com a troca de imagem */
 .gallery-card.cinema-breathe {
-    animation: photoBreathe 4.8s ease-in-out infinite;
+    animation: none;
 }
-
-@keyframes photoChange {
-    0% { filter: brightness(.8) saturate(.8); transform: scale(.985); }
-    55% { filter: brightness(1.06) saturate(1.06); transform: scale(1.012); }
-    100% { filter: brightness(1) saturate(1); transform: scale(1); }
-}
-
-@keyframes photoBreathe {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.012); }
-}
-
 #surprise-overlay.show {
     animation: surpriseIn 1.2s cubic-bezier(.18,.8,.2,1) both;
 }
