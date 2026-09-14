@@ -2,40 +2,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
     console.log("GALLERY FIRE: carregado");
 
-
     // =====================================================
     // ELEMENTOS
     // =====================================================
 
-    const wrapper =
-        document.getElementById("gallery-wrapper");
+    const wrapper = document.getElementById("gallery-wrapper");
 
-
-    const cards =
-        Array.from(
-            document.querySelectorAll(".gallery-card")
-        );
-
+    const cards = Array.from(
+        document.querySelectorAll(".gallery-card")
+    );
 
     const currentCounter =
         document.getElementById("gallery-current");
 
-
     const totalCounter =
         document.getElementById("gallery-total");
-
 
     const caption =
         document.getElementById("gallery-caption");
 
-
     const surpriseOverlay =
         document.getElementById("surprise-overlay");
 
-
     const closeSurprise =
         document.getElementById("close-surprise");
-
 
     const finalScreen =
         document.getElementById("final-screen");
@@ -43,39 +33,45 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (!wrapper || !cards.length) {
 
-        console.error(
-            "Galeria não encontrada."
-        );
+        console.error("Galeria não encontrada.");
 
         return;
-
     }
 
 
     // =====================================================
-    // CONFIGURACOES
+    // CONFIGURAÇÕES
     // =====================================================
 
     const total = cards.length;
 
-    const swipeThreshold = 70;
+    const SWIPE_THRESHOLD = 70;
+
+    // Distância máxima usada para o efeito visual
+    const MAX_DRAG = 180;
+
+    // Duração da troca de foto
+    const TRANSITION_TIME = 360;
 
     let currentIndex = 0;
 
     let startX = 0;
-
     let currentX = 0;
 
     let isDragging = false;
+    let isAnimating = false;
 
     let hasMoved = false;
 
-    let isAnimating = false;
+    let animationFrame = null;
 
     let surpriseShown = false;
-
     let finalScreenShown = false;
 
+
+    // =====================================================
+    // LEGENDAS
+    // =====================================================
 
     const captions = [
 
@@ -111,27 +107,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =====================================================
-    // INDICE CIRCULAR
+    // ÍNDICE CIRCULAR
     // =====================================================
 
     function normalizeIndex(index) {
 
         if (index < 0) {
-
             return total - 1;
-
         }
-
 
         if (index >= total) {
-
             return 0;
-
         }
 
-
         return index;
-
     }
 
 
@@ -143,11 +132,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (!card) return;
 
-
         card.style.transform = "";
-
         card.style.opacity = "";
-
         card.style.zIndex = "";
 
     }
@@ -156,8 +142,33 @@ document.addEventListener("DOMContentLoaded", function () {
     function clearAllCardStyles() {
 
         cards.forEach(function (card) {
-
             clearCardStyles(card);
+        });
+
+    }
+
+
+    // =====================================================
+    // PREPARAR CARTAS
+    // =====================================================
+
+    function prepareCards() {
+
+        cards.forEach(function (card) {
+
+            card.classList.remove(
+                "active",
+                "next",
+                "previous",
+                "dragging",
+                "leaving-left",
+                "leaving-right",
+                "preview-right",
+                "preview-left",
+                "becoming-active"
+            );
+
+            card.style.willChange = "transform, opacity";
 
         });
 
@@ -172,11 +183,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         clearAllCardStyles();
 
-
         cards.forEach(function (card, index) {
 
             card.classList.remove(
-
                 "active",
                 "next",
                 "previous",
@@ -186,43 +195,47 @@ document.addEventListener("DOMContentLoaded", function () {
                 "preview-right",
                 "preview-left",
                 "becoming-active"
-
             );
 
 
+            // FOTO ATUAL
             if (index === currentIndex) {
 
-                card.classList.add(
-                    "active"
-                );
+                card.classList.add("active");
+
+                card.style.zIndex = "10";
 
             }
 
 
+            // PRÓXIMA FOTO
             else if (
-                index ===
-                normalizeIndex(
-                    currentIndex + 1
-                )
+                index === normalizeIndex(currentIndex + 1)
             ) {
 
-                card.classList.add(
-                    "next"
-                );
+                card.classList.add("next");
+
+                card.style.zIndex = "5";
 
             }
 
 
+            // FOTO ANTERIOR
             else if (
-                index ===
-                normalizeIndex(
-                    currentIndex - 1
-                )
+                index === normalizeIndex(currentIndex - 1)
             ) {
 
-                card.classList.add(
-                    "previous"
-                );
+                card.classList.add("previous");
+
+                card.style.zIndex = "5";
+
+            }
+
+
+            // DEMAIS FOTOS
+            else {
+
+                card.style.zIndex = "1";
 
             }
 
@@ -246,22 +259,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 "counter-change"
             );
 
-
-            void currentCounter.offsetWidth;
-
-
             currentCounter.textContent =
-                String(
-                    currentIndex + 1
-                ).padStart(
-                    2,
-                    "0"
+                String(currentIndex + 1).padStart(2, "0");
+
+            // Pequeno reset sem forçar layout pesado
+            requestAnimationFrame(function () {
+
+                currentCounter.classList.add(
+                    "counter-change"
                 );
 
-
-            currentCounter.classList.add(
-                "counter-change"
-            );
+            });
 
         }
 
@@ -270,17 +278,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
             caption.style.opacity = "0";
 
-
             setTimeout(function () {
+
+                if (!caption) return;
 
                 caption.textContent =
                     captions[currentIndex] ||
                     "Nosso primeiro capítulo ❤️";
 
-
                 caption.style.opacity = "1";
 
-            }, 180);
+            }, 140);
 
         }
 
@@ -288,64 +296,48 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =====================================================
-    // CORACOES
+    // CORAÇÕES
     // =====================================================
 
     function createHeartBurst() {
 
-        const amount = 8;
+        const amount = 6;
 
-
-        for (
-            let i = 0;
-            i < amount;
-            i++
-        ) {
+        for (let i = 0; i < amount; i++) {
 
             const heart =
                 document.createElement("span");
 
-
             heart.className =
                 "gallery-heart";
-
 
             heart.textContent =
                 Math.random() > 0.5
                     ? "❤️"
                     : "♥";
 
-
             heart.style.left =
                 `${45 + Math.random() * 10}%`;
-
 
             heart.style.top =
                 `${42 + Math.random() * 12}%`;
 
-
             heart.style.setProperty(
                 "--x",
-                `${(Math.random() - 0.5) * 280}px`
+                `${(Math.random() - 0.5) * 240}px`
             );
-
 
             heart.style.setProperty(
                 "--y",
-                `${-80 - Math.random() * 220}px`
+                `${-70 - Math.random() * 200}px`
             );
-
 
             heart.style.setProperty(
                 "--delay",
-                `${Math.random() * 0.15}s`
+                `${Math.random() * 0.12}s`
             );
 
-
-            wrapper.appendChild(
-                heart
-            );
-
+            wrapper.appendChild(heart);
 
             setTimeout(function () {
 
@@ -359,58 +351,204 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =====================================================
-    // MUDAR FOTO
+    // APLICAR TRANSFORM
     // =====================================================
 
-    function goTo(
-        newIndex,
-        direction
-    ) {
+    function applyDragTransform() {
 
-        if (finalScreenShown) {
+        animationFrame = null;
 
+        if (!isDragging || isAnimating) {
             return;
-
-        }
-
-
-        if (isAnimating) {
-
-            return;
-
-        }
-
-
-        if (
-            newIndex ===
-            currentIndex
-        ) {
-
-            return;
-
         }
 
 
         const activeCard =
             cards[currentIndex];
 
+        if (!activeCard) {
+            return;
+        }
+
+
+        let difference =
+            currentX - startX;
+
+
+        // Limita o deslocamento
+        if (difference > MAX_DRAG) {
+            difference = MAX_DRAG;
+        }
+
+        if (difference < -MAX_DRAG) {
+            difference = -MAX_DRAG;
+        }
+
+
+        // Marca movimento real
+        if (Math.abs(difference) > 6) {
+            hasMoved = true;
+        }
+
+
+        // =================================================
+        // FOTO ATUAL
+        // =================================================
+
+        const rotation =
+            difference * 0.018;
+
+        const scale =
+            1 -
+            Math.min(
+                Math.abs(difference) / 2500,
+                0.035
+            );
+
+
+        activeCard.style.transform =
+            `translate3d(${difference}px, 0, 0) ` +
+            `rotate(${rotation}deg) ` +
+            `scale(${scale})`;
+
+
+        // =================================================
+        // FOTO VIZINHA
+        // =================================================
+
+        const direction =
+            difference < 0
+                ? 1
+                : -1;
+
+
+        const targetIndex =
+            normalizeIndex(
+                currentIndex + direction
+            );
+
+
+        const targetCard =
+            cards[targetIndex];
+
+
+        if (!targetCard) {
+            return;
+        }
+
+
+        const wrapperWidth =
+            wrapper.clientWidth || window.innerWidth;
+
+
+        const progress =
+            Math.min(
+                Math.abs(difference) /
+                wrapperWidth,
+                1
+            );
+
+
+        // A próxima foto começa ligeiramente afastada
+        const targetX =
+            direction > 0
+                ? 45 - progress * 45
+                : -45 + progress * 45;
+
+
+        const targetScale =
+            0.94 +
+            progress * 0.06;
+
+
+        const targetOpacity =
+            0.45 +
+            progress * 0.55;
+
+
+        targetCard.style.transform =
+            `translate3d(${targetX}px, 0, 0) ` +
+            `scale(${targetScale})`;
+
+        targetCard.style.opacity =
+            targetOpacity;
+
+        targetCard.style.zIndex =
+            "20";
+
+    }
+
+
+    // =====================================================
+    // SOLICITAR ATUALIZAÇÃO
+    // =====================================================
+
+    function requestDragUpdate() {
+
+        if (animationFrame !== null) {
+            return;
+        }
+
+        animationFrame =
+            requestAnimationFrame(
+                applyDragTransform
+            );
+
+    }
+
+
+    // =====================================================
+    // MUDAR FOTO
+    // =====================================================
+
+    function goTo(newIndex, direction) {
+
+        if (finalScreenShown) {
+            return;
+        }
+
+
+        if (isAnimating) {
+            return;
+        }
+
+
+        if (newIndex === currentIndex) {
+            return;
+        }
+
+
+        const activeCard =
+            cards[currentIndex];
 
         const targetCard =
             cards[newIndex];
 
 
-        if (
-            !activeCard ||
-            !targetCard
-        ) {
-
+        if (!activeCard || !targetCard) {
             return;
-
         }
 
 
         isAnimating = true;
 
+
+        // Cancela frame pendente
+        if (animationFrame !== null) {
+
+            cancelAnimationFrame(
+                animationFrame
+            );
+
+            animationFrame = null;
+
+        }
+
+
+        // Remove estados antigos
+        activeCard.classList.remove(
+            "dragging"
+        );
 
         targetCard.classList.remove(
             "next",
@@ -418,86 +556,124 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-        targetCard.classList.add(
+        // Garante que a foto alvo esteja preparada
+        targetCard.style.zIndex = "20";
 
+
+        targetCard.classList.add(
             direction < 0
                 ? "preview-right"
                 : "preview-left"
-
         );
 
 
-        targetCard.style.zIndex =
-            "20";
+        // Força estado inicial
+        const startPosition =
+            direction > 0
+                ? "translate3d(45px, 0, 0) scale(0.94)"
+                : "translate3d(-45px, 0, 0) scale(0.94)";
 
 
-        requestAnimationFrame(
-            function () {
+        targetCard.style.transition =
+            "none";
+
+        targetCard.style.transform =
+            startPosition;
+
+        targetCard.style.opacity =
+            "0.45";
 
 
-                activeCard.classList.add(
-
-                    direction < 0
-                        ? "leaving-left"
-                        : "leaving-right"
-
-                );
+        activeCard.style.transition =
+            `transform ${TRANSITION_TIME}ms cubic-bezier(0.22, 1, 0.36, 1), ` +
+            `opacity ${TRANSITION_TIME}ms ease`;
 
 
-                targetCard.classList.add(
-                    "becoming-active"
-                );
+        targetCard.style.transition =
+            `transform ${TRANSITION_TIME}ms cubic-bezier(0.22, 1, 0.36, 1), ` +
+            `opacity ${TRANSITION_TIME}ms ease`;
 
+
+        requestAnimationFrame(function () {
+
+            // Foto atual sai
+            const exitX =
+                direction > 0
+                    ? "-105%"
+                    : "105%";
+
+
+            activeCard.style.transform =
+                `translate3d(${exitX}, 0, 0) ` +
+                `rotate(${direction > 0 ? -3 : 3}deg) ` +
+                `scale(0.98)`;
+
+
+            activeCard.style.opacity =
+                "0";
+
+
+            // Nova foto entra
+            targetCard.style.transform =
+                "translate3d(0, 0, 0) scale(1)";
+
+
+            targetCard.style.opacity =
+                "1";
+
+        });
+
+
+        setTimeout(function () {
+
+            currentIndex =
+                newIndex;
+
+
+            // Limpa somente as cartas envolvidas
+            clearCardStyles(activeCard);
+            clearCardStyles(targetCard);
+
+
+            activeCard.style.transition = "";
+            targetCard.style.transition = "";
+
+
+            renderGallery();
+
+
+            isAnimating = false;
+
+
+            createHeartBurst();
+
+
+            // =================================================
+            // FOTO 14
+            // =================================================
+
+            if (
+                currentIndex === total - 1 &&
+                !surpriseShown
+            ) {
+
+                prepareFinalPhoto();
 
             }
-        );
 
-
-        setTimeout(
-            function () {
-
-                currentIndex =
-                    newIndex;
-
-
-                renderGallery();
-
-
-                isAnimating = false;
-
-
-                createHeartBurst();
-
-
-                // FOTO14
-
-                if (
-                    currentIndex ===
-                    total - 1 &&
-                    !surpriseShown
-                ) {
-
-                    prepareFinalPhoto();
-
-                }
-
-            },
-            520
-        );
+        }, TRANSITION_TIME + 30);
 
     }
 
 
     // =====================================================
-    // PROXIMA FOTO
+    // PRÓXIMA FOTO
     // =====================================================
 
     function nextPhoto() {
 
-        if (finalScreenShown) {
-
+        if (finalScreenShown || isAnimating) {
             return;
-
         }
 
 
@@ -521,10 +697,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function previousPhoto() {
 
-        if (finalScreenShown) {
-
+        if (finalScreenShown || isAnimating) {
             return;
-
         }
 
 
@@ -543,31 +717,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =====================================================
-    // ARRASTAR
+    // INICIAR ARRASTE
     // =====================================================
 
     function startDrag(x) {
 
         if (isAnimating) {
-
             return;
-
         }
 
 
         if (finalScreenShown) {
-
             return;
-
         }
 
 
         startX = x;
-
         currentX = x;
 
         isDragging = true;
-
         hasMoved = false;
 
 
@@ -581,10 +749,18 @@ document.addEventListener("DOMContentLoaded", function () {
                 "dragging"
             );
 
+
+            activeCard.style.transition =
+                "none";
+
         }
 
     }
 
+
+    // =====================================================
+    // MOVER ARRASTE
+    // =====================================================
 
     function moveDrag(x) {
 
@@ -593,154 +769,13 @@ document.addEventListener("DOMContentLoaded", function () {
             isAnimating ||
             finalScreenShown
         ) {
-
             return;
-
         }
 
 
         currentX = x;
 
-
-        const difference =
-            currentX - startX;
-
-
-        if (
-            Math.abs(difference) > 5
-        ) {
-
-            hasMoved = true;
-
-        }
-
-
-        const activeCard =
-            cards[currentIndex];
-
-
-        if (!activeCard) {
-
-            return;
-
-        }
-
-
-        const rotation =
-            difference * 0.035;
-
-
-        const scale =
-            1 -
-            Math.min(
-                Math.abs(difference) / 1500,
-                0.06
-            );
-
-
-        activeCard.style.transform =
-
-            `translate3d(
-                ${difference}px,
-                0,
-                0
-            )
-            rotate(${rotation}deg)
-            scale(${scale})`;
-
-
-        const direction =
-            difference < 0
-                ? 1
-                : -1;
-
-
-        const targetIndex =
-            normalizeIndex(
-                currentIndex + direction
-            );
-
-
-        const targetCard =
-            cards[targetIndex];
-
-
-        if (!targetCard) {
-
-            return;
-
-        }
-
-
-        const progress =
-            Math.min(
-                Math.abs(difference) /
-                wrapper.offsetWidth,
-                1
-            );
-
-
-        targetCard.classList.add(
-
-            direction > 0
-                ? "preview-right"
-                : "preview-left"
-
-        );
-
-
-        targetCard.style.zIndex =
-            "20";
-
-
-        const targetX =
-            direction > 0
-                ? -35 + progress * 35
-                : 35 - progress * 35;
-
-
-        const targetScale =
-            0.90 +
-            progress * 0.10;
-
-
-        const targetOpacity =
-            0.35 +
-            progress * 0.65;
-
-
-        targetCard.style.transform =
-
-            `translate3d(
-                ${targetX}px,
-                0,
-                0
-            )
-            scale(${targetScale})`;
-
-
-        targetCard.style.opacity =
-            targetOpacity;
-
-
-        cards.forEach(
-            function (card) {
-
-                if (
-                    card !== activeCard &&
-                    card !== targetCard
-                ) {
-
-                    card.style.opacity =
-                        "";
-
-                    card.style.transform =
-                        "";
-
-                }
-
-            }
-        );
+        requestDragUpdate();
 
     }
 
@@ -752,13 +787,22 @@ document.addEventListener("DOMContentLoaded", function () {
     function endDrag() {
 
         if (!isDragging) {
-
             return;
-
         }
 
 
         isDragging = false;
+
+
+        if (animationFrame !== null) {
+
+            cancelAnimationFrame(
+                animationFrame
+            );
+
+            animationFrame = null;
+
+        }
 
 
         const difference =
@@ -778,9 +822,13 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
+        // =================================================
+        // SWIPE PARA ESQUERDA
+        // =================================================
+
         if (
             Math.abs(difference) >=
-            swipeThreshold
+            SWIPE_THRESHOLD
         ) {
 
             if (difference < 0) {
@@ -795,59 +843,89 @@ document.addEventListener("DOMContentLoaded", function () {
 
             }
 
+
+            setTimeout(function () {
+
+                hasMoved = false;
+
+            }, TRANSITION_TIME + 100);
+
+
+            return;
         }
 
-        else {
+
+        // =================================================
+        // CANCELAR ARRASTE
+        // =================================================
+
+        if (activeCard) {
+
+            activeCard.style.transition =
+                "transform 280ms cubic-bezier(0.22, 1, 0.36, 1)";
+
+
+            activeCard.style.transform =
+                "translate3d(0, 0, 0) " +
+                "rotate(0deg) " +
+                "scale(1)";
+
+        }
+
+
+        const nextIndex =
+            difference < 0
+                ? normalizeIndex(currentIndex + 1)
+                : normalizeIndex(currentIndex - 1);
+
+
+        const targetCard =
+            cards[nextIndex];
+
+
+        if (targetCard) {
+
+            targetCard.style.transition =
+                "transform 280ms cubic-bezier(0.22, 1, 0.36, 1), opacity 280ms ease";
+
+
+            targetCard.style.transform =
+                "";
+
+
+            targetCard.style.opacity =
+                "";
+
+        }
+
+
+        setTimeout(function () {
 
             if (activeCard) {
 
-                activeCard.style.transform =
-                    "translate3d(0, 0, 0) rotate(0deg) scale(1)";
+                activeCard.style.transition =
+                    "";
 
             }
-
-
-            const nextIndex =
-                difference < 0
-                    ? normalizeIndex(
-                        currentIndex + 1
-                    )
-                    : normalizeIndex(
-                        currentIndex - 1
-                    );
-
-
-            const targetCard =
-                cards[nextIndex];
 
 
             if (targetCard) {
 
-                targetCard.style.transform =
-                    "";
-
-                targetCard.style.opacity =
+                targetCard.style.transition =
                     "";
 
             }
 
-        }
 
+            hasMoved = false;
 
-        setTimeout(
-            function () {
-
-                hasMoved = false;
-
-            },
-            100
-        );
+        }, 300);
 
     }
 
 
     // =====================================================
-    // TOUCH / MOUSE
+    // POINTER DOWN
     // =====================================================
 
     wrapper.addEventListener(
@@ -858,9 +936,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 event.pointerType === "mouse" &&
                 event.button !== 0
             ) {
-
                 return;
+            }
 
+
+            if (isAnimating || finalScreenShown) {
+                return;
             }
 
 
@@ -879,18 +960,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
             catch (error) {}
 
+        },
+        {
+            passive: true
         }
     );
 
+
+    // =====================================================
+    // POINTER MOVE
+    // =====================================================
 
     wrapper.addEventListener(
         "pointermove",
         function (event) {
 
             if (!isDragging) {
-
                 return;
-
             }
 
 
@@ -898,18 +984,23 @@ document.addEventListener("DOMContentLoaded", function () {
                 event.clientX
             );
 
+        },
+        {
+            passive: true
         }
     );
 
+
+    // =====================================================
+    // POINTER UP
+    // =====================================================
 
     wrapper.addEventListener(
         "pointerup",
         function (event) {
 
             if (!isDragging) {
-
                 return;
-
             }
 
 
@@ -930,11 +1021,37 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
 
+    // =====================================================
+    // POINTER CANCEL
+    // =====================================================
+
     wrapper.addEventListener(
         "pointercancel",
         function () {
 
             if (isDragging) {
+
+                endDrag();
+
+            }
+
+        }
+    );
+
+
+    // =====================================================
+    // POINTER LEAVE
+    // =====================================================
+
+    wrapper.addEventListener(
+        "pointerleave",
+        function (event) {
+
+            // Somente mouse
+            if (
+                event.pointerType === "mouse" &&
+                isDragging
+            ) {
 
                 endDrag();
 
@@ -953,16 +1070,15 @@ document.addEventListener("DOMContentLoaded", function () {
         function (event) {
 
             if (hasMoved) {
-
                 return;
-
             }
 
 
-            if (finalScreenShown) {
-
+            if (
+                finalScreenShown ||
+                isAnimating
+            ) {
                 return;
-
             }
 
 
@@ -1002,10 +1118,11 @@ document.addEventListener("DOMContentLoaded", function () {
         "keydown",
         function (event) {
 
-            if (finalScreenShown) {
-
+            if (
+                finalScreenShown ||
+                isAnimating
+            ) {
                 return;
-
             }
 
 
@@ -1041,9 +1158,7 @@ document.addEventListener("DOMContentLoaded", function () {
         function () {
 
             if (finalScreenShown) {
-
                 return;
-
             }
 
 
@@ -1068,63 +1183,54 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =====================================================
-    // PREPARAR FOTO14
+    // PREPARAR FOTO 14
     // =====================================================
 
     function prepareFinalPhoto() {
 
         if (!surpriseOverlay) {
-
             return;
-
         }
 
 
-        setTimeout(
-            function () {
+        setTimeout(function () {
 
-                if (finalScreenShown) {
-
-                    return;
-
-                }
+            if (finalScreenShown) {
+                return;
+            }
 
 
-                surpriseOverlay.classList.add(
-                    "show"
-                );
+            surpriseOverlay.classList.add(
+                "show"
+            );
 
 
-                surpriseShown = true;
+            surpriseShown = true;
 
 
-                createFinalHearts();
+            createFinalHearts();
 
-            },
-            1100
-        );
+        }, 900);
 
     }
 
 
     // =====================================================
-    // CORACOES DA SURPRESA
+    // CORAÇÕES DA SURPRESA
     // =====================================================
 
     function createFinalHearts() {
 
         if (!surpriseOverlay) {
-
             return;
-
         }
 
 
-        for (
-            let i = 0;
-            i < 18;
-            i++
-        ) {
+        // Limita a quantidade para iPhone
+        const amount = 12;
+
+
+        for (let i = 0; i < amount; i++) {
 
             const heart =
                 document.createElement(
@@ -1159,14 +1265,11 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
 
-            setTimeout(
-                function () {
+            setTimeout(function () {
 
-                    heart.remove();
+                heart.remove();
 
-                },
-                8000
-            );
+            }, 8000);
 
         }
 
@@ -1174,7 +1277,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =====================================================
-    // BOTAO DA SURPRESA -> TELA FINAL
+    // BOTÃO DA SURPRESA -> TELA FINAL
     // =====================================================
 
     if (closeSurprise) {
@@ -1189,16 +1292,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                 if (finalScreenShown) {
-
                     return;
-
                 }
 
 
                 finalScreenShown = true;
 
-
-                // Bloqueia o botao
 
                 closeSurprise.disabled =
                     true;
@@ -1209,7 +1308,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                 // Esconde a surpresa
-
                 if (surpriseOverlay) {
 
                     surpriseOverlay.classList.remove(
@@ -1219,25 +1317,23 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
 
-                // Pequena transicao
+                // Pequena transição
+                setTimeout(function () {
 
-                setTimeout(
-                    function () {
+                    if (finalScreen) {
 
-                        if (finalScreen) {
+                        finalScreen.classList.add(
+                            "show"
+                        );
 
-                            finalScreen.classList.add(
-                                "show"
-                            );
+                    }
 
-                        }
-
-                    },
-                    500
-                );
+                }, 450);
 
 
-                // Aumenta suavemente a musica
+                // =================================================
+                // AUMENTAR MÚSICA
+                // =================================================
 
                 const music =
                     document.getElementById(
@@ -1251,20 +1347,24 @@ document.addEventListener("DOMContentLoaded", function () {
                         music.volume;
 
 
+                    const targetVolume =
+                        0.55;
+
+
                     const increaseMusic =
                         setInterval(
                             function () {
 
-                                volume += 0.02;
+                                volume += 0.025;
 
 
                                 if (
                                     volume >=
-                                    0.55
+                                    targetVolume
                                 ) {
 
                                     volume =
-                                        0.55;
+                                        targetVolume;
 
 
                                     clearInterval(
@@ -1290,37 +1390,136 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =====================================================
-    // PRE-CARREGAR FOTOS
+    // PRÉ-CARREGAR FOTOS
     // =====================================================
 
-    cards.forEach(
-        function (card) {
+    function preloadImages() {
+
+        cards.forEach(function (card) {
 
             const image =
                 card.querySelector("img");
 
 
             if (!image) {
-
                 return;
-
             }
 
 
-            const preload =
-                new Image();
+            // Prioridade para as primeiras fotos
+            image.decoding = "async";
 
 
-            preload.src =
-                image.src;
+            // Mantém a própria imagem no navegador
+            if (
+                image.loading ===
+                "lazy"
+            ) {
 
+                image.loading =
+                    "eager";
+
+            }
+
+        });
+
+
+        // Pré-carrega somente as vizinhas
+        // em vez de criar várias imagens duplicadas
+        preloadImage(
+            currentIndex
+        );
+
+        preloadImage(
+            normalizeIndex(
+                currentIndex + 1
+            )
+        );
+
+        preloadImage(
+            normalizeIndex(
+                currentIndex - 1
+            )
+        );
+
+    }
+
+
+    function preloadImage(index) {
+
+        const card =
+            cards[index];
+
+
+        if (!card) {
+            return;
         }
-    );
+
+
+        const image =
+            card.querySelector("img");
+
+
+        if (!image) {
+            return;
+        }
+
+
+        if (
+            image.complete &&
+            image.naturalWidth > 0
+        ) {
+            return;
+        }
+
+
+        image.loading =
+            "eager";
+
+    }
 
 
     // =====================================================
-    // INICIO
+    // PRÉ-CARREGAR PRÓXIMAS FOTOS
     // =====================================================
+
+    function preloadAroundCurrent() {
+
+        preloadImage(
+            currentIndex
+        );
+
+
+        preloadImage(
+            normalizeIndex(
+                currentIndex + 1
+            )
+        );
+
+
+        preloadImage(
+            normalizeIndex(
+                currentIndex - 1
+            )
+        );
+
+    }
+
+
+    // =====================================================
+    // ATUALIZAR APÓS TROCA
+    // =====================================================
+
+    const originalRender =
+        renderGallery;
+
+
+    // =====================================================
+    // INICIALIZAÇÃO
+    // =====================================================
+
+    prepareCards();
+
 
     if (totalCounter) {
 
@@ -1334,6 +1533,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     renderGallery();
+
+
+    preloadImages();
 
 
     console.log(
