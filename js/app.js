@@ -56,6 +56,21 @@ document.addEventListener(
                 "days-counter"
             );
 
+        const hoursCounter =
+            document.getElementById(
+                "hours-counter"
+            );
+
+        const minutesCounter =
+            document.getElementById(
+                "minutes-counter"
+            );
+
+        const secondsCounter =
+            document.getElementById(
+                "seconds-counter"
+            );
+
         const quote =
             document.getElementById(
                 "quote"
@@ -63,8 +78,16 @@ document.addEventListener(
 
 
         // =================================================
-        // DATA
+        // DATA DE INÍCIO DO RELACIONAMENTO
         // =================================================
+
+        /*
+            ALTERE APENAS ESTA LINHA CASO
+            QUEIRA MUDAR A DATA/HORA.
+
+            Atualmente:
+            13/09/2026 às 00:00
+        */
 
         const inicio =
             new Date(
@@ -107,6 +130,7 @@ document.addEventListener(
                 welcomeScreen.classList.remove(
                     "active"
                 );
+
             }
 
 
@@ -115,6 +139,7 @@ document.addEventListener(
                 storyScreen.classList.remove(
                     "active"
                 );
+
             }
 
 
@@ -123,6 +148,7 @@ document.addEventListener(
                 galleryScreen.classList.remove(
                     "active"
                 );
+
             }
 
 
@@ -156,13 +182,27 @@ document.addEventListener(
                     0.35;
 
 
+                /*
+                    O play acontece dentro do clique
+                    do botão inicial.
+
+                    Isso aumenta bastante a chance
+                    de funcionar no iPhone/Safari.
+                */
+
                 await music.play();
+
+
+                console.log(
+                    "Música iniciada."
+                );
 
 
             } catch (error) {
 
                 console.log(
-                    "Áudio bloqueado pelo navegador."
+                    "Áudio bloqueado pelo navegador.",
+                    error
                 );
 
             }
@@ -188,8 +228,16 @@ document.addEventListener(
                     );
 
 
+                    /*
+                        Primeiro inicia a música.
+                    */
+
                     await startMusic();
 
+
+                    /*
+                        Depois abre a história.
+                    */
 
                     mostrarTela(
                         storyScreen
@@ -224,6 +272,11 @@ document.addEventListener(
                     );
 
 
+                    /*
+                        Informa para a galeria
+                        que ela foi aberta.
+                    */
+
                     setTimeout(
                         function () {
 
@@ -244,12 +297,22 @@ document.addEventListener(
 
 
         // =================================================
-        // CONTADOR DE DIAS
+        // CONTADOR COMPLETO
         // =================================================
 
         function atualizarContador() {
 
-            if (!daysCounter) {
+            /*
+                Verifica se todos os elementos
+                existem antes de continuar.
+            */
+
+            if (
+                !daysCounter ||
+                !hoursCounter ||
+                !minutesCounter ||
+                !secondsCounter
+            ) {
                 return;
             }
 
@@ -258,34 +321,150 @@ document.addEventListener(
                 new Date();
 
 
-            if (agora < inicio) {
+            /*
+                Caso a data atual seja anterior
+                à data de início.
+            */
+
+            if (
+                agora <
+                inicio
+            ) {
 
                 daysCounter.textContent =
                     "00";
 
+                hoursCounter.textContent =
+                    "00";
+
+                minutesCounter.textContent =
+                    "00";
+
+                secondsCounter.textContent =
+                    "00";
+
                 return;
+
             }
 
 
+            /*
+                Diferença em milissegundos.
+            */
+
             const diferenca =
-                agora -
-                inicio;
+                agora.getTime() -
+                inicio.getTime();
 
 
-            const dias =
+            /*
+                Converte para segundos.
+            */
+
+            const totalSegundos =
                 Math.floor(
                     diferenca /
-                    (
-                        1000 *
-                        60 *
-                        60 *
-                        24
-                    )
+                    1000
                 );
 
 
+            /*
+                1 dia = 86.400 segundos.
+            */
+
+            const dias =
+                Math.floor(
+                    totalSegundos /
+                    86400
+                );
+
+
+            /*
+                Pega somente as horas
+                restantes depois dos dias.
+            */
+
+            const horas =
+                Math.floor(
+                    (
+                        totalSegundos %
+                        86400
+                    ) /
+                    3600
+                );
+
+
+            /*
+                Pega somente os minutos
+                restantes depois das horas.
+            */
+
+            const minutos =
+                Math.floor(
+                    (
+                        totalSegundos %
+                        3600
+                    ) /
+                    60
+                );
+
+
+            /*
+                Pega os segundos restantes.
+            */
+
+            const segundos =
+                totalSegundos %
+                60;
+
+
+            /*
+                Atualiza DIAS.
+            */
+
             daysCounter.textContent =
-                String(dias).padStart(
+                String(
+                    dias
+                ).padStart(
+                    2,
+                    "0"
+                );
+
+
+            /*
+                Atualiza HORAS.
+            */
+
+            hoursCounter.textContent =
+                String(
+                    horas
+                ).padStart(
+                    2,
+                    "0"
+                );
+
+
+            /*
+                Atualiza MINUTOS.
+            */
+
+            minutesCounter.textContent =
+                String(
+                    minutos
+                ).padStart(
+                    2,
+                    "0"
+                );
+
+
+            /*
+                Atualiza SEGUNDOS.
+            */
+
+            secondsCounter.textContent =
+                String(
+                    segundos
+                ).padStart(
                     2,
                     "0"
                 );
@@ -293,12 +472,20 @@ document.addEventListener(
         }
 
 
+        /*
+            Executa imediatamente.
+        */
+
         atualizarContador();
 
 
+        /*
+            Atualiza a cada 1 segundo.
+        */
+
         setInterval(
             atualizarContador,
-            60000
+            1000
         );
 
 
@@ -325,6 +512,7 @@ document.addEventListener(
             ) {
 
                 fraseAtual = 0;
+
             }
 
 
@@ -366,6 +554,7 @@ document.addEventListener(
             welcomeScreen.classList.add(
                 "active"
             );
+
         }
 
 
@@ -374,6 +563,7 @@ document.addEventListener(
             storyScreen.classList.remove(
                 "active"
             );
+
         }
 
 
@@ -382,8 +572,13 @@ document.addEventListener(
             galleryScreen.classList.remove(
                 "active"
             );
+
         }
 
+
+        // =================================================
+        // FINALIZAÇÃO
+        // =================================================
 
         console.log(
             "APP PRONTO"
