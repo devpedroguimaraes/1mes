@@ -612,9 +612,13 @@ button {
 
     cursor: grab;
 
-    perspective: 1200px;
+    /* Otimização Safari/iPhone: evita custo extra de perspective */
+    perspective: none;
 
     overflow: visible;
+
+    /* Isola o layout da galeria */
+    contain: layout style;
 }
 
 .gallery-wrapper:active {
@@ -664,14 +668,20 @@ button {
         translate3d(0,0,0)
         scale(0.88);
 
+    /* Animar somente transform e opacity é mais leve no iOS */
     transition:
-        transform 0.5s cubic-bezier(.2,.8,.2,1),
-        opacity 0.5s ease,
-        filter 0.5s ease;
+        transform 0.36s cubic-bezier(.22,.75,.25,1),
+        opacity 0.36s ease;
 
-    will-change:
-        transform,
-        opacity;
+    will-change: auto;
+
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+
+    -webkit-transform: translate3d(0,0,0) scale(0.88);
+    transform: translate3d(0,0,0) scale(0.88);
+
+    contain: paint;
 }
 
 .gallery-card img {
@@ -685,6 +695,12 @@ button {
     pointer-events: none;
 
     -webkit-user-drag: none;
+
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+
+    -webkit-transform: translate3d(0,0,0);
+    transform: translate3d(0,0,0);
 }
 
 .gallery-card.active {
@@ -738,8 +754,10 @@ button {
     opacity: 0.5;
 
     transition:
-        transform 0.15s linear,
-        opacity 0.15s linear;
+        transform 0.18s cubic-bezier(.22,.75,.25,1),
+        opacity 0.18s ease;
+
+    will-change: transform, opacity;
 }
 
 .gallery-card.becoming-active {
@@ -748,14 +766,71 @@ button {
     filter: brightness(1);
 
     transition:
-        transform 0.52s cubic-bezier(.16,.84,.24,1),
-        opacity 0.52s ease;
+        transform 0.36s cubic-bezier(.22,.75,.25,1),
+        opacity 0.36s ease;
+
+    will-change: transform, opacity;
+}
+
+
+/* =========================================================
+   OTIMIZAÇÃO SAFARI / IPHONE
+========================================================= */
+
+.gallery-card.dragging,
+.gallery-card.preview-right,
+.gallery-card.preview-left {
+    filter: none !important;
+}
+
+.gallery-card.active,
+.gallery-card.next,
+.gallery-card.previous {
+    will-change: transform, opacity;
+}
+
+@media (max-width: 600px) {
+
+    .gallery-wrapper {
+        touch-action: pan-y pinch-zoom;
+        -webkit-tap-highlight-color: transparent;
+        perspective: none;
+        contain: layout style;
+    }
+
+    .gallery-track {
+        transform: translate3d(0,0,0);
+        -webkit-transform: translate3d(0,0,0);
+        contain: layout paint;
+    }
+
+    .gallery-card {
+        transition:
+            transform 0.34s cubic-bezier(.22,.75,.25,1),
+            opacity 0.34s ease;
+    }
+
+    .gallery-card.dragging {
+        transition: none !important;
+    }
+
+    .gallery-card.next {
+        filter: none;
+    }
+
+    .gallery-card img {
+        pointer-events: none;
+        -webkit-user-drag: none;
+        user-select: none;
+        -webkit-user-select: none;
+    }
 }
 
 
 /* =========================================================
    SAIDA
 ========================================================= */
+
 
 .gallery-card.leaving-left {
     opacity: 0;
@@ -766,8 +841,8 @@ button {
         scale(0.92);
 
     transition:
-        transform 0.5s cubic-bezier(.65,0,.35,1),
-        opacity 0.4s ease;
+        transform 0.36s cubic-bezier(.22,.75,.25,1),
+        opacity 0.30s ease;
 }
 
 .gallery-card.leaving-right {
@@ -779,8 +854,8 @@ button {
         scale(0.92);
 
     transition:
-        transform 0.5s cubic-bezier(.65,0,.35,1),
-        opacity 0.4s ease;
+        transform 0.36s cubic-bezier(.22,.75,.25,1),
+        opacity 0.30s ease;
 }
 
 
