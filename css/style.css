@@ -1839,3 +1839,292 @@ body,
     animation-delay: 6s;
 
 }
+
+/* =========================================================
+   CONTADOR DO NOSSO PRIMEIRO CAPÍTULO
+   ESTILO CINEMATOGRÁFICO
+========================================================= */
+
+.relationship-counter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    width: 100%;
+    max-width: 500px;
+
+    margin: 24px auto 22px;
+
+    padding: 16px 14px;
+
+    box-sizing: border-box;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.055),
+            rgba(255, 255, 255, 0.018)
+        );
+
+    border: 1px solid rgba(255, 255, 255, 0.10);
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 10px 35px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+
+/* =========================================================
+   CADA BLOCO
+========================================================= */
+
+.relationship-counter .counter-item {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    min-width: 62px;
+
+    flex: 1;
+}
+
+
+/* =========================================================
+   NÚMERO
+========================================================= */
+
+.relationship-counter .counter-number {
+    display: block;
+
+    font-size: clamp(1.45rem, 4vw, 2rem);
+
+    font-weight: 600;
+
+    line-height: 1;
+
+    letter-spacing: 0.04em;
+
+    color: #ffffff;
+
+    font-variant-numeric: tabular-nums;
+
+    text-shadow:
+        0 0 18px rgba(255, 255, 255, 0.18);
+}
+
+
+/* =========================================================
+   LABEL
+========================================================= */
+
+.relationship-counter .counter-label {
+    display: block;
+
+    margin-top: 7px;
+
+    font-size: 0.52rem;
+
+    font-weight: 600;
+
+    letter-spacing: 0.16em;
+
+    color: rgba(255, 255, 255, 0.55);
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   SEPARADORES
+========================================================= */
+
+.relationship-counter .counter-separator {
+    align-self: center;
+
+    margin-top: -10px;
+
+    font-size: 1.2rem;
+
+    font-weight: 300;
+
+    color: rgba(255, 255, 255, 0.28);
+
+    user-select: none;
+}
+
+
+/* =========================================================
+   DESTAQUE SUAVE NOS SEGUNDOS
+========================================================= */
+
+.relationship-counter
+.counter-item:last-child
+.counter-number {
+
+    animation:
+        counterPulse 1s ease-in-out infinite;
+}
+
+
+@keyframes counterPulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.72;
+    }
+
+}
+
+
+/* =========================================================
+   IPHONE / CELULARES
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .relationship-counter {
+
+        gap: 5px;
+
+        width: calc(100% - 24px);
+
+        margin: 20px auto;
+
+        padding: 14px 8px;
+
+        border-radius: 16px;
+
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+
+    }
+
+
+    .relationship-counter
+    .counter-item {
+
+        min-width: 0;
+
+    }
+
+
+    .relationship-counter
+    .counter-number {
+
+        font-size: 1.35rem;
+
+        letter-spacing: 0.02em;
+
+    }
+
+
+    .relationship-counter
+    .counter-label {
+
+        margin-top: 6px;
+
+        font-size: 0.43rem;
+
+        letter-spacing: 0.10em;
+
+    }
+
+
+    .relationship-counter
+    .counter-separator {
+
+        font-size: 1rem;
+
+        margin-top: -8px;
+
+    }
+
+}
+
+
+/* =========================================================
+   IPHONE 12 / TELAS MAIS ESTREITAS
+========================================================= */
+
+@media (max-width: 390px) {
+
+    .relationship-counter {
+
+        gap: 3px;
+
+        padding: 13px 5px;
+
+    }
+
+
+    .relationship-counter
+    .counter-number {
+
+        font-size: 1.18rem;
+
+    }
+
+
+    .relationship-counter
+    .counter-label {
+
+        font-size: 0.39rem;
+
+        letter-spacing: 0.08em;
+
+    }
+
+
+    .relationship-counter
+    .counter-separator {
+
+        font-size: 0.85rem;
+
+    }
+
+}
+
+
+/* =========================================================
+   TELAS MUITO PEQUENAS
+========================================================= */
+
+@media (max-width: 350px) {
+
+    .relationship-counter
+    .counter-number {
+
+        font-size: 1.05rem;
+
+    }
+
+
+    .relationship-counter
+    .counter-label {
+
+        font-size: 0.35rem;
+
+    }
+
+
+    .relationship-counter
+    .counter-separator {
+
+        font-size: 0.75rem;
+
+    }
+
+}
